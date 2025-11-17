@@ -16,6 +16,7 @@ do
     (--badminton) location=1;;
     (-b) location=1;;
     (--days) day_count="$2"; shift;;
+    (-d=* | --days=*) day_count="${1#*=}";;
     (-d) day_count="$2"; shift;;
     (-*) echo >&2 ${USAGE}
     exit 1;;
