@@ -1,4 +1,4 @@
-# hungry
+# HUNGRY
 hungry
 
 # PREREQUISITES
