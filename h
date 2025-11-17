@@ -2,6 +2,7 @@
 # sets up usage
 USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o --badminton -b"
 
+location=0
 day_count=0
 
 # parses and reads command line arguments
