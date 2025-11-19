@@ -36,5 +36,5 @@ if [[ location -eq -1 ]] ; then
 elif [[ location -eq 1 ]] ; then
   echo Awwwww 🏸
 elif [[ location -eq 0 ]] ; then
-  echo 12:00:00.001 in lobby?
+  echo Meet in lobby at 12:00:00.001?
 fi
