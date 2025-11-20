@@ -187,7 +187,7 @@ else
     echo
 fi
 
-test_case="office argument with what, short;short"
+test_case="office argument with eat intention, short;short"
 echo case $test_case
 input="-o -w Burrito"
 expected="Meet in lobby at 12:00:00.001? It's Burrrrittooo time!!!"
@@ -205,7 +205,7 @@ else
     echo
 fi
 
-test_case="office argument with what, short;short"
+test_case="office argument with eat intention, short;short"
 echo case $test_case
 input="-o -w Ravioli"
 expected="Meet in lobby at 12:00:00.001? It's Raviooooooli time!!!"
@@ -223,7 +223,7 @@ else
     echo
 fi
 
-test_case="office argument with what, short;short"
+test_case="office argument with eat intention, short;short"
 echo case $test_case
 input="-o -w Burger"
 expected="Meet in lobby at 12:00:00.001? It's Buuuuuuurger time!!!"
@@ -241,7 +241,7 @@ else
     echo
 fi
 
-test_case="office argument with what, short;short"
+test_case="office argument with eat intention, short;short"
 echo case $test_case
 input="-o -w Pho"
 expected="Meet in lobby at 12:00:00.001? It's Phhooooooooo time!!!"
@@ -259,7 +259,7 @@ else
     echo
 fi
 
-test_case="office argument with what, short;short"
+test_case="office argument with eat intention, short;short"
 echo case $test_case
 input="-o -w Sushhhhiiiiiifdidiiiissqihiii"
 expected="Meet in lobby at 12:00:00.001? It's Suuuuuuuushi time!!!"
@@ -276,7 +276,6 @@ else
     success_count=$(( success_count+1 ))
     echo
 fi
-
 
 echo "number of tests:  " $run_count
 echo "succeeded:        " $success_count
