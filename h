@@ -4,6 +4,7 @@ USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o --badminton -b"
 
 location=0
 day_count=0
+eat_intention=0
 
 # parses and reads command line arguments
 while [ $# -gt 0 ]
@@ -18,11 +19,22 @@ do
     (--days) day_count="$2"; shift;;
     (-d=* | --days=*) day_count="${1#*=}";;
     (-d) day_count="$2"; shift;;
+    (-w=* | --what=*) eat_intention_arg="${1#*=}";;
+    (-w) eat_intention_arg="$2"; shift;;
+    (--what) eat_intention_arg="$2"; shift;;
     (-*) echo >&2 ${USAGE}
     exit 1;;
   esac
   shift
 done
+
+case "$eat_intention_arg" in
+   (Burrito) eat_intention=1;;
+   (Ravioli) eat_intention=2;;
+   (Burger) eat_intention=3;;
+   (Pho) eat_intention=4;;
+   (Sushhhhiiiiiifdidiiiissqihiii) eat_intention=5;;
+esac
 
 if [[ location -eq -1 ]] ; then
   echo Awwww
@@ -36,5 +48,18 @@ if [[ location -eq -1 ]] ; then
 elif [[ location -eq 1 ]] ; then
   echo Awwww 🏸
 elif [[ location -eq 0 ]] ; then
-  echo Meet in lobby at 12:00:00.001?
+  echo -n Meet in lobby at 12:00:00.001?
+  if [[ eat_intention -eq 1 ]] ; then
+    echo " It's Burrrrittooo time!!!"
+  elif [[ eat_intention -eq 2 ]] ; then
+    echo " It's Raviooooooli time!!!"
+  elif [[ eat_intention -eq 3 ]] ; then
+    echo " It's Buuuuuuurger time!!!"
+  elif [[ eat_intention -eq 4 ]] ; then
+    echo " It's Phhooooooooo time!!!"
+  elif [[ eat_intention -eq 5 ]] ; then
+    echo " It's Suuuuuuuushi time!!!"
+  else
+    echo
+  fi
 fi

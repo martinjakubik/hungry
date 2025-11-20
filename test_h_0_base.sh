@@ -187,6 +187,96 @@ else
     echo
 fi
 
+test_case="office argument with what, short;short"
+echo case $test_case
+input="-o -w Burrito"
+expected="Meet in lobby at 12:00:00.001? It's Burrrrittooo time!!!"
+actual=$($HOME/code/gitwork/hungry/h $input)
+run_count=$(( run_count+1 ))
+if [[ ! $actual = $expected ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
+test_case="office argument with what, short;short"
+echo case $test_case
+input="-o -w Ravioli"
+expected="Meet in lobby at 12:00:00.001? It's Raviooooooli time!!!"
+actual=$($HOME/code/gitwork/hungry/h $input)
+run_count=$(( run_count+1 ))
+if [[ ! $actual = $expected ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
+test_case="office argument with what, short;short"
+echo case $test_case
+input="-o -w Burger"
+expected="Meet in lobby at 12:00:00.001? It's Buuuuuuurger time!!!"
+actual=$($HOME/code/gitwork/hungry/h $input)
+run_count=$(( run_count+1 ))
+if [[ ! $actual = $expected ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
+test_case="office argument with what, short;short"
+echo case $test_case
+input="-o -w Pho"
+expected="Meet in lobby at 12:00:00.001? It's Phhooooooooo time!!!"
+actual=$($HOME/code/gitwork/hungry/h $input)
+run_count=$(( run_count+1 ))
+if [[ ! $actual = $expected ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
+test_case="office argument with what, short;short"
+echo case $test_case
+input="-o -w Sushhhhiiiiiifdidiiiissqihiii"
+expected="Meet in lobby at 12:00:00.001? It's Suuuuuuuushi time!!!"
+actual=$($HOME/code/gitwork/hungry/h $input)
+run_count=$(( run_count+1 ))
+if [[ ! $actual = $expected ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
 
 echo "number of tests:  " $run_count
 echo "succeeded:        " $success_count
