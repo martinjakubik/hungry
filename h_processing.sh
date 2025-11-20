@@ -1,9 +1,10 @@
 # sets up usage
-USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o --badminton -b"
+USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b"
 
 location=0
 day_count=0
 eat_intention=0
+current_date=$1; shift;
 
 # parses and reads command line arguments
 while [ $# -gt 0 ]
@@ -32,6 +33,7 @@ case "$eat_intention_arg" in
    (Ravioli) eat_intention=2;;
    (Burger) eat_intention=3;;
    (Pho) eat_intention=4;;
+   (Sushi) eat_intention=5;;
    (Sushhhhiiiiiifdidiiiissqihiii) eat_intention=5;;
 esac
 
@@ -57,7 +59,11 @@ elif [[ location -eq 0 ]] ; then
   elif [[ eat_intention -eq 4 ]] ; then
     echo " It's Phhooooooooo time!!!"
   elif [[ eat_intention -eq 5 ]] ; then
-    echo " It's Suuuuuuuushi time!!!"
+    if [[ "$(date -jf "%Y-%m-%d" $current_date +%a)" = "Fri" ]] ; then
+      echo " It's Suuuuuuuushi time!!!"
+    else
+      echo " Whoa, it's $(date -jf "%Y-%m-%d" $current_date +%A)!"
+    fi
   else
     echo
   fi
