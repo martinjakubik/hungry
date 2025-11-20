@@ -25,7 +25,7 @@ do
 done
 
 if [[ location -eq -1 ]] ; then
-  echo Awwwww
+  echo Awwww
   if [[ day_count -gt 1 && day_count -lt 5 ]] ; then
     echo One hopes that you feel better soon
   elif [[ day_count -gt 4 && day_count -lt 9 ]] ; then
@@ -34,7 +34,7 @@ if [[ location -eq -1 ]] ; then
     echo Wow that sounds really serious, wtf. Are you Ok?
   fi
 elif [[ location -eq 1 ]] ; then
-  echo Awwwww 🏸
+  echo Awwww 🏸
 elif [[ location -eq 0 ]] ; then
   echo Meet in lobby at 12:00:00.001?
 fi
