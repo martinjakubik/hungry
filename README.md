@@ -10,5 +10,6 @@ bash shell on your PATH
 set h as executable
 
     $ chmod +x h
+    $ chmod +x h_processing.sh
 
-copy h to anywhere on your PATH
+copy h and h_processing.sh to a place anywhere on your PATH
