@@ -8,7 +8,7 @@ test_case="no arguments"
 echo case $test_case
 input=""
 expected="Meet in lobby at 12:00:00.001?"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
@@ -26,7 +26,7 @@ test_case="office argument, short"
 echo case $test_case
 input="-o"
 expected="Meet in lobby at 12:00:00.001?"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
@@ -44,7 +44,7 @@ test_case="office argument, long"
 echo case $test_case
 input="--office"
 expected="Meet in lobby at 12:00:00.001?"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
@@ -62,7 +62,7 @@ test_case="home argument, short"
 echo case $test_case
 input="-h"
 expected="Awwww"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
@@ -80,7 +80,7 @@ test_case="home argument, long"
 echo case $test_case
 input="--home"
 expected="Awwww"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
@@ -98,7 +98,7 @@ test_case="badminton argument, short"
 echo case $test_case
 input="-b"
 expected="Awwww 🏸"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
@@ -116,7 +116,7 @@ test_case="badminton argument, long"
 echo case $test_case
 input="--badminton"
 expected="Awwww 🏸"
-actual=$($HOME/code/gitwork/hungry/h "$input")
+actual=$($HOME/code/gitwork/hungry/h $input)
 run_count=$(( run_count+1 ))
 if [[ ! $actual = $expected ]] ; then
     fail_count=$(( fail_count+1 ))
