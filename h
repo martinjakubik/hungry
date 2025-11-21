@@ -5,4 +5,4 @@ if [[ "$1" = "--mock_date" ]] ; then
   shift;
   current_date=$1; shift;
 fi
-./h_lib.sh "$current_date" "$@"
+h_lib.sh "$current_date" "$@"
