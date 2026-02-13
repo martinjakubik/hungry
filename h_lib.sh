@@ -1,16 +1,17 @@
 # sets up usage
-USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b"
+USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when n]"
 
 location=0
 day_count=0
 eat_intention=0
+when_count=0
 current_date=$1; shift;
 
 # parses and reads command line arguments
 while [ $# -gt 0 ]
 do
   case "$1" in
-    (--home) location="-1";; 
+    (--home) location="-1";;
     (-h) location="-1";;
     (--office) location=0;;
     (-o) location=0;;
@@ -22,11 +23,18 @@ do
     (-w=* | --what=*) eat_intention_arg="${1#*=}";;
     (-w) eat_intention_arg="$2"; shift;;
     (--what) eat_intention_arg="$2"; shift;;
+    (--when) when_count="$2"; shift;;
+    (--when=*) when_count="${1#*=}";;
     (-*) echo >&2 ${USAGE}
     exit 1;;
   esac
   shift
 done
+
+if ! [[ "$when_count" =~ ^[0-9]+$ ]] || [[ "$when_count" -le 0 ]]; then
+    echo "Error: --when must be a positive integer" >&2
+    exit 1
+fi
 
 case "$eat_intention_arg" in
    (Burrito) eat_intention=1;;
@@ -49,7 +57,15 @@ if [[ location -eq -1 ]] ; then
 elif [[ location -eq 1 ]] ; then
   echo Awwww 🏸
 elif [[ location -eq 0 ]] ; then
-  echo -n Meet in lobby at 12:00:00.001?
+  if [[ -n "$when_count" ]]; then
+    if [[ "$when_count" -eq 1 ]]; then
+      echo -n "12:00:00.001 in lobby tomorrow?"
+    else
+      echo -n "12:00:00.001 in lobby in $when_count days?"
+    fi
+  else
+    echo -n "Meet in lobby at 12:00:00.001?"
+  fi
   if [[ eat_intention -eq 1 ]] ; then
     echo " It's Burrrrittooo time!!!"
   elif [[ eat_intention -eq 2 ]] ; then
