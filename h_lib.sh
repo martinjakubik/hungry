@@ -31,7 +31,7 @@ do
   shift
 done
 
-if ! [[ "$when_count" =~ ^[0-9]+$ ]] || [[ "$when_count" -le 0 ]]; then
+if ! [[ "$when_count" =~ ^[0-9]+$ ]] || [[ "$when_count" -lt 0 ]]; then
     echo "Error: --when must be a positive integer" >&2
     exit 1
 fi
@@ -57,14 +57,12 @@ if [[ location -eq -1 ]] ; then
 elif [[ location -eq 1 ]] ; then
   echo Awwww 🏸
 elif [[ location -eq 0 ]] ; then
-  if [[ -n "$when_count" ]]; then
-    if [[ "$when_count" -eq 1 ]]; then
-      echo -n "12:00:00.001 in lobby tomorrow?"
-    else
-      echo -n "12:00:00.001 in lobby in $when_count days?"
-    fi
-  else
+  if [[ "$when_count" -eq 0 ]]; then
     echo -n "Meet in lobby at 12:00:00.001?"
+  elif [[ "$when_count" -eq 1 ]]; then
+    echo -n "12:00:00.001 in lobby tomorrow?"
+  else
+    echo -n "12:00:00.001 in lobby in $when_count days?"
   fi
   if [[ eat_intention -eq 1 ]] ; then
     echo " It's Burrrrittooo time!!!"
