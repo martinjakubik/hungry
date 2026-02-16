@@ -23,6 +23,7 @@ do
     (-w=* | --what=*) eat_intention_arg="${1#*=}";;
     (-w) eat_intention_arg="$2"; shift;;
     (--what) eat_intention_arg="$2"; shift;;
+    (--when=*) when_option="${1#*=}";;
     (--when) when_option="$2"; shift;;
     (-*) echo >&2 ${USAGE}
     exit 1;;
