@@ -1,11 +1,11 @@
 # sets up usage
-USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when n]"
+USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}]"
 
 location=0
 day_count=0
 eat_intention=0
-when_count=0
 current_date=$1; shift;
+when_option=""
 
 # parses and reads command line arguments
 while [ $# -gt 0 ]
@@ -23,18 +23,12 @@ do
     (-w=* | --what=*) eat_intention_arg="${1#*=}";;
     (-w) eat_intention_arg="$2"; shift;;
     (--what) eat_intention_arg="$2"; shift;;
-    (--when) when_count="$2"; shift;;
-    (--when=*) when_count="${1#*=}";;
+    (--when) when_option="$2"; shift;;
     (-*) echo >&2 ${USAGE}
     exit 1;;
   esac
   shift
 done
-
-if ! [[ "$when_count" =~ ^[0-9]+$ ]] || [[ "$when_count" -lt 0 ]]; then
-    echo "Error: --when must be a positive integer" >&2
-    exit 1
-fi
 
 case "$eat_intention_arg" in
    (Burrito) eat_intention=1;;
@@ -57,28 +51,37 @@ if [[ location -eq -1 ]] ; then
 elif [[ location -eq 1 ]] ; then
   echo Awwww 🏸
 elif [[ location -eq 0 ]] ; then
-  if [[ "$when_count" -eq 0 ]]; then
-    echo -n "Meet in lobby at 12:00:00.001?"
-  elif [[ "$when_count" -eq 1 ]]; then
-    echo -n "12:00:00.001 in lobby tomorrow?"
-  else
-    echo -n "12:00:00.001 in lobby in $when_count days?"
-  fi
-  if [[ eat_intention -eq 1 ]] ; then
-    echo " It's Burrrrittooo time!!!"
-  elif [[ eat_intention -eq 2 ]] ; then
-    echo " It's Raviooooooli time!!!"
-  elif [[ eat_intention -eq 3 ]] ; then
-    echo " It's Buuuuuuurger time!!!"
-  elif [[ eat_intention -eq 4 ]] ; then
-    echo " It's Phhooooooooo time!!!"
-  elif [[ eat_intention -eq 5 ]] ; then
-    if [[ "$(date -jf "%Y-%m-%d" $current_date +%a)" = "Fri" ]] ; then
-      echo " It's Suuuuuuuushi time!!!"
+  if [[ -n "$when_option" ]] ; then
+    if [[ "$when_option" =~ ^[0-9]+$ ]] ; then
+      echo "12:00:00.001 in lobby in $when_option days?"
     else
-      echo " Whoa, it's $(date -jf "%Y-%m-%d" $current_date +%A)!"
+      case "$when_option" in
+        (Mo) echo "12:00:00.001 in lobby Monday?" ;;
+        (Tu) echo "12:00:00.001 in lobby Tuesday?" ;;
+        (We) echo "12:00:00.001 in lobby Wednesday?" ;;
+        (Th) echo "12:00:00.001 in lobby Thursday?" ;;
+        (Sh) echo "12:00:00.001 in lobby SushiDay?" ;;
+        (*) echo "Meet in lobby at 12:00:00.001?" ;;
+      esac
     fi
   else
-    echo
+    echo -n "Meet in lobby at 12:00:00.001?"
+    if [[ eat_intention -eq 1 ]] ; then
+      echo " It's Burrrrittooo time!!!"
+    elif [[ eat_intention -eq 2 ]] ; then
+      echo " It's Raviooooooli time!!!"
+    elif [[ eat_intention -eq 3 ]] ; then
+      echo " It's Buuuuuuurger time!!!"
+    elif [[ eat_intention -eq 4 ]] ; then
+      echo " It's Phhooooooooo time!!!"
+    elif [[ eat_intention -eq 5 ]] ; then
+      if [[ "$(date -jf "%Y-%m-%d" $current_date +%a)" = "Fri" ]] ; then
+        echo " It's Suuuuuuuushi time!!!"
+      else
+        echo " Whoa, it's $(date -jf "%Y-%m-%d" $current_date +%A)!"
+      fi
+    else
+      echo
+    fi
   fi
 fi

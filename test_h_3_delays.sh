@@ -58,6 +58,24 @@ else
     echo
 fi
 
+test_case="checking valid text --when Sh"
+echo case $test_case
+input="-o --when Sh"
+expected="12:00:00.001 in lobby SushiDay?"
+actual=$($HOME/code/gitwork/hungry/h --mock_date "2020-01-03" $input)
+run_count=$(( run_count+1 ))
+if [[ ! $actual = $expected ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
 echo "number of tests:  " $run_count
 echo "succeeded:        " $success_count
 echo "failed:           " $fail_count
