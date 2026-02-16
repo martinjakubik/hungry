@@ -8,9 +8,9 @@ test_case="office argument with eat intention, mock Friday"
 echo case $test_case
 input="-o -w Sushhhhiiiiiifdidiiiissqihiii"
 expected="Meet in lobby at 12:00:00.001? It's Suuuuuuuushi time!!!"
-actual=$($HOME/code/gitwork/hungry/h --mock_date "2020-01-03" $input)
+actual=$(./h --mock_date "2020-01-03" $input 2>&1)
 run_count=$(( run_count+1 ))
-if [[ ! $actual = $expected ]] ; then
+if [[ ! "$actual" = "$expected" ]] ; then
     fail_count=$(( fail_count+1 ))
     echo failed
     echo "actual:   " "$actual"
@@ -26,9 +26,9 @@ test_case="office argument with eat intention, mock Wednesday"
 echo case $test_case
 input="-o -w Sushhhhiiiiiifdidiiiissqihiii"
 expected="Meet in lobby at 12:00:00.001? Whoa, it's Wednesday!"
-actual=$($HOME/code/gitwork/hungry/h --mock_date "2020-01-01" $input)
+actual=$(./h --mock_date "2020-01-01" $input 2>&1)
 run_count=$(( run_count+1 ))
-if [[ ! $actual = $expected ]] ; then
+if [[ ! "$actual" = "$expected" ]] ; then
     fail_count=$(( fail_count+1 ))
     echo failed
     echo "actual:   " "$actual"
