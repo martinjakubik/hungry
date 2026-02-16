@@ -7,6 +7,54 @@ eat_intention=0
 current_date=$1; shift;
 when_option=""
 
+# Configuration file support
+hungry_config_directory="${HUNGRYCONFIGDIR:-$HOME/.config/h}"
+config_file="$hungry_config_directory/config.h"
+
+# Create config directory if it doesn't exist
+mkdir -p "$hungry_config_directory"
+
+# Create config file if it doesn't exist
+if [[ ! -f "$config_file" ]]; then
+  cat > "$config_file" << EOF
+## hungry configuration file
+## automatically created at $(date)
+#
+## example configuration (remove # to enable the line)
+#
+## URL of Teams webhook to post message to a specific team
+# team.webhook.url=<url>
+# team.webhook.authentication ...
+#
+## calendar of activities
+## name of activity
+# activity.0.name=activityName
+## days of week on which activity typically takes place (mon, tue, wed, thu, fri, sat, sun), comma or comma+whitespace separated
+# activity.0.weekdays=activityWeekdays
+## dates in the year on which activity does not take place (MM-DD formatted dates), comma or comma+whitespace separated
+# activity.0.exceptiondays.<year>=activityExceptionDays
+EOF
+fi
+
+# Read configuration file
+config_values=()
+while IFS= read -r line || [[ -n "$line" ]]; do
+  # Skip comments and empty lines
+  if [[ "$line" =~ ^[[:space:]]*# ]] || [[ -z "$line" ]]; then
+    continue
+  fi
+
+  # Parse key-value pairs
+  if [[ "$line" =~ ^[[:space:]]*([^=]+)=(.*)$ ]]; then
+    key="${BASH_REMATCH[1]}"
+    value="${BASH_REMATCH[2]}"
+    # Trim whitespace from key and value
+    key=$(echo "$key" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    value=$(echo "$value" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    config_values+=("$key=$value")
+  fi
+done < "$config_file"
+
 # parses and reads command line arguments
 while [ $# -gt 0 ]
 do
