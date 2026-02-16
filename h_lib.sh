@@ -52,8 +52,15 @@ elif [[ location -eq 1 ]] ; then
   echo Awwww 🏸
 elif [[ location -eq 0 ]] ; then
   if [[ -n "$when_option" ]] ; then
-    if [[ "$when_option" =~ ^[0-9]+$ ]] ; then
-      echo "12:00:00.001 in lobby in $when_option days?"
+    if [[ "$when_option" =~ ^-?[0-9]+$ ]] ; then
+      if [[ "$when_option" -le 0 ]] ; then
+        echo >&2 ${USAGE}
+        exit 1
+      elif [[ "$when_option" -eq 1 ]] ; then
+          echo "12:00:00.001 in lobby tomorrow?"
+      else
+        echo "12:00:00.001 in lobby in $when_option days?"
+      fi
     else
       case "$when_option" in
         (Mo) echo "12:00:00.001 in lobby Monday?" ;;
