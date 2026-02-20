@@ -12,7 +12,7 @@ hungry_message=""
 
 # Configuration file support
 hungry_config_directory="${HUNGRYCONFIGDIR:-$HOME/.config/h}"
-config_file="$hungry_config_directory/config.h"
+config_file="$hungry_config_directory/config.hungry"
 
 # Create config directory if it doesn't exist
 mkdir -p "$hungry_config_directory"
