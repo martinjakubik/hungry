@@ -73,30 +73,6 @@ for entry in "${config_values[@]}"; do
   esac
 done
 
-# If all are set, perform Azure AD token request and authenticated API call
-if [[ -n "$tenant_id" && -n "$client_id" && -n "$client_secret" ]]; then
-  # Get bearer token from Azure AD
-  token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
-    -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "grant_type=client_credentials" \
-    -d "client_id=${client_id}" \
-    -d "client_secret=${client_secret}" \
-    -d "scope=https://graph.microsoft.com/.default")
-  bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
-  if [[ -z "$bearer_token" ]]; then
-    echo "Failed to obtain bearer token from Azure AD." >&2
-  else
-    # Use bearer token to authenticate second POST request
-    api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
-    json_body='{ "message": "This is the message" }'
-    api_response=$(curl -s -X POST "$api_url" \
-      -H "Authorization: Bearer $bearer_token" \
-      -H "Content-Type: application/json" \
-      -d "$json_body")
-    echo "API response: $api_response"
-  fi
-fi
-
 # parses and reads command line arguments
 while [ $# -gt 0 ]
 do
@@ -180,6 +156,30 @@ elif [[ location -eq 0 ]] ; then
         hungry_message+=" Whoa, it's $(date -jf "%Y-%m-%d" $current_date +%A)!"
       fi
     fi
+  fi
+fi
+
+# if all tenant_id, client_id, client_secret are set, performs Azure AD token request and authenticated API call
+if [[ -n "$tenant_id" && -n "$client_id" && -n "$client_secret" ]]; then
+  # gets bearer token from Azure AD
+  token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -d "grant_type=client_credentials" \
+    -d "client_id=${client_id}" \
+    -d "client_secret=${client_secret}" \
+    -d "scope=https://graph.microsoft.com/.default")
+  bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+  if [[ -z "$bearer_token" ]]; then
+    echo "Failed to obtain bearer token from Azure AD." >&2
+  else
+    # uses bearer token to authenticate second POST request
+    api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
+    json_body="{ \"message\": \"${hungry_message}\" }"
+    api_response=$(curl -s -X POST "$api_url" \
+      -H "Authorization: Bearer $bearer_token" \
+      -H "Content-Type: application/json" \
+      -d "$json_body")
+    echo "API response: $api_response"
   fi
 fi
 
