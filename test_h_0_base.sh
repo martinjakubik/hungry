@@ -130,7 +130,7 @@ else
     echo
 fi
 
-test_case="home argument with days, short;short"
+test_case="home argument with 3 days, short;short"
 echo case $test_case
 input="-h -d 3"
 expected="Awwww
@@ -168,11 +168,30 @@ else
     echo
 fi
 
-test_case="home argument with days, short;long equal"
+test_case="home argument with 5 days, short;long equal"
 echo case $test_case
-input="-h --days=3"
+input="-h --days=5"
 expected="Awwww
-One hopes that you feel better soon"
+Wow that sounds serious."
+actual=$(./h $input 2>&1)
+run_count=$(( run_count+1 ))
+if [[ ! "$actual" = "$expected" ]] ; then
+    fail_count=$(( fail_count+1 ))
+    echo failed
+    echo "actual:   " "$actual"
+    echo "expected: " "$expected"
+    echo
+else
+    echo succeeded
+    success_count=$(( success_count+1 ))
+    echo
+fi
+
+test_case="home argument with 9 days, short;short"
+echo case $test_case
+input="-h --days=9"
+expected="Awwww
+Wow that sounds really serious, wtf. Are you Ok?"
 actual=$(./h $input 2>&1)
 run_count=$(( run_count+1 ))
 if [[ ! "$actual" = "$expected" ]] ; then
