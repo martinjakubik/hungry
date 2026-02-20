@@ -22,6 +22,11 @@ if [[ ! -f "$config_file" ]]; then
 #
 ## example configuration (remove # to enable the line)
 #
+## Azure AD authentication
+# team.webhook.tenant.id=<your-tenant-id>
+# team.webhook.client.id=<your-client-id>
+# team.webhook.client.secret=<your-client-secret>
+#
 ## URL of Teams webhook to post message to a specific team
 # team.webhook.url=<url>
 # team.webhook.authentication ...
@@ -54,6 +59,42 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     config_values+=("$key=$value")
   fi
 done < "$config_file"
+
+# Read tenant_id, client_id, client_secret from config
+tenant_id=""
+client_id=""
+client_secret=""
+for entry in "${config_values[@]}"; do
+  case "$entry" in
+    (team.webhook.tenant.id=*) tenant_id="${entry#team.webhook.tenant.id=}" ;;
+    (team.webhook.client.id=*) client_id="${entry#team.webhook.client.id=}" ;;
+    (team.webhook.client.secret=*) client_secret="${entry#team.webhook.client.secret=}" ;;
+  esac
+done
+
+# If all are set, perform Azure AD token request and authenticated API call
+if [[ -n "$tenant_id" && -n "$client_id" && -n "$client_secret" ]]; then
+  # Get bearer token from Azure AD
+  token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
+    -H "Content-Type: application/x-www-form-urlencoded" \
+    -d "grant_type=client_credentials" \
+    -d "client_id=${client_id}" \
+    -d "client_secret=${client_secret}" \
+    -d "scope=https://graph.microsoft.com/.default")
+  bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+  if [[ -z "$bearer_token" ]]; then
+    echo "Failed to obtain bearer token from Azure AD." >&2
+  else
+    # Use bearer token to authenticate second POST request
+    api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
+    json_body='{ "message": "This is the message" }'
+    api_response=$(curl -s -X POST "$api_url" \
+      -H "Authorization: Bearer $bearer_token" \
+      -H "Content-Type: application/json" \
+      -d "$json_body")
+    echo "API response: $api_response"
+  fi
+fi
 
 # parses and reads command line arguments
 while [ $# -gt 0 ]
