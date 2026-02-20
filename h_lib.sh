@@ -171,14 +171,17 @@ if [[ "$post_to_teams" = true ]]; then
       -d "grant_type=client_credentials" \
       -d "client_id=${client_id}" \
       -d "client_secret=${client_secret}" \
-      -d "scope=https://graph.microsoft.com/.default")
+      -d "scope=https://service.flow.microsoft.com//.default")
+    echo "Token response: $token_response"
     bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+    echo "Obtained bearer token: $bearer_token"
     if [[ -z "$bearer_token" ]]; then
       echo "Failed to obtain bearer token from Azure AD." >&2
     else
       # uses bearer token to authenticate second POST request
       api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
       json_body="{ \"message\": \"${hungry_message}\" }"
+      echo "Making authenticated API call to Teams webhook with message: ${hungry_message}"
       api_response=$(curl -s -X POST "$api_url" \
         -H "Authorization: Bearer $bearer_token" \
         -H "Content-Type: application/json" \
