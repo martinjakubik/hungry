@@ -1,11 +1,12 @@
 # sets up usage
-USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}]"
+USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}] --post_to_teams"
 
 location=0
 day_count=0
 eat_intention=0
 current_date=$1; shift;
 when_option=""
+post_to_teams=false
 hungry_message=""
 
 # Configuration file support
@@ -91,6 +92,7 @@ do
     (--what) eat_intention_arg="$2"; shift;;
     (--when=*) when_option="${1#*=}";;
     (--when) when_option="$2"; shift;;
+    (--post_to_teams) post_to_teams=true;;
     (-*) echo >&2 ${USAGE}
     exit 1;;
   esac
@@ -159,27 +161,30 @@ elif [[ location -eq 0 ]] ; then
   fi
 fi
 
-# if all tenant_id, client_id, client_secret are set, performs Azure AD token request and authenticated API call
-if [[ -n "$tenant_id" && -n "$client_id" && -n "$client_secret" ]]; then
-  # gets bearer token from Azure AD
-  token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
-    -H "Content-Type: application/x-www-form-urlencoded" \
-    -d "grant_type=client_credentials" \
-    -d "client_id=${client_id}" \
-    -d "client_secret=${client_secret}" \
-    -d "scope=https://graph.microsoft.com/.default")
-  bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
-  if [[ -z "$bearer_token" ]]; then
-    echo "Failed to obtain bearer token from Azure AD." >&2
-  else
-    # uses bearer token to authenticate second POST request
-    api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
-    json_body="{ \"message\": \"${hungry_message}\" }"
-    api_response=$(curl -s -X POST "$api_url" \
-      -H "Authorization: Bearer $bearer_token" \
-      -H "Content-Type: application/json" \
-      -d "$json_body")
-    echo "API response: $api_response"
+if [[ "$post_to_teams" = true ]]; then
+  echo "(posting to Teams!)"
+  # if all tenant_id, client_id, client_secret are set, performs Azure AD token request and authenticated API call
+  if [[ -n "$tenant_id" && -n "$client_id" && -n "$client_secret" ]]; then
+    # gets bearer token from Azure AD
+    token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
+      -H "Content-Type: application/x-www-form-urlencoded" \
+      -d "grant_type=client_credentials" \
+      -d "client_id=${client_id}" \
+      -d "client_secret=${client_secret}" \
+      -d "scope=https://graph.microsoft.com/.default")
+    bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+    if [[ -z "$bearer_token" ]]; then
+      echo "Failed to obtain bearer token from Azure AD." >&2
+    else
+      # uses bearer token to authenticate second POST request
+      api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
+      json_body="{ \"message\": \"${hungry_message}\" }"
+      api_response=$(curl -s -X POST "$api_url" \
+        -H "Authorization: Bearer $bearer_token" \
+        -H "Content-Type: application/json" \
+        -d "$json_body")
+      echo "API response: $api_response"
+    fi
   fi
 fi
 
