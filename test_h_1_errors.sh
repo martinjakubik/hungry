@@ -7,7 +7,7 @@ fail_count=0
 test_case="bad arguments"
 echo case $test_case
 input="-x"
-expected="usage: ./h_lib.sh --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}]"
+expected="usage: ./h_lib.sh --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}] --post_to_teams --debug"
 actual=$(./h $input 2>&1)
 run_count=$(( run_count+1 ))
 if [[ ! "$actual" = "$expected" ]] ; then

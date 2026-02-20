@@ -43,7 +43,7 @@ fi
 test_case="checking invalid --when -3"
 echo case $test_case
 input="-o --when -3"
-expected="usage: ./h_lib.sh --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}]"
+expected="usage: ./h_lib.sh --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}] --post_to_teams --debug"
 actual=$(./h --mock_date "2020-01-03" $input 2>&1)
 run_count=$(( run_count+1 ))
 if [[ ! "$actual" = "$expected" ]] ; then

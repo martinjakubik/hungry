@@ -95,6 +95,7 @@ do
     (--when) when_option="$2"; shift;;
     (--post_to_teams) post_to_teams=true;;
     (--debug) debug=true;;
+    (-*) echo >&2 ${USAGE}
     exit 1;;
   esac
   shift
