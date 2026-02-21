@@ -170,31 +170,31 @@ if [[ "$post_to_teams" = true ]]; then
   echo "(posting to Teams!)"
   # if all tenant_id, client_id, client_secret are set, performs Azure AD token request and authenticated API call
   if [[ -n "$tenant_id" && -n "$client_id" && -n "$client_secret" ]]; then
-    # gets bearer token from Azure AD
-    token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
-      -H "Content-Type: application/x-www-form-urlencoded" \
-      -d "grant_type=client_credentials" \
-      -d "client_id=${client_id}" \
-      -d "client_secret=${client_secret}" \
-      -d "scope=https://service.flow.microsoft.com//.default")
-    if [[ "$debug" = true ]]; then
-      echo "Azure AD token response: $token_response"
-    fi
-    bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
-    if [[ "$debug" = true ]]; then
-      echo "Obtained bearer token: $bearer_token"
-    fi
-    if [[ -z "$bearer_token" ]]; then
-      echo "Failed to obtain bearer token from Azure AD." >&2
+    if [[ "$mock_api" = true ]]; then
+      echo "mocking Azure AD token request and API call"
     else
-      api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
-      json_body="{ \"message\": \"${hungry_message}\" }"
+      # gets bearer token from Azure AD
+      token_response=$(curl -s -X POST "https://login.microsoftonline.com/${tenant_id}/oauth2/v2.0/token" \
+        -H "Content-Type: application/x-www-form-urlencoded" \
+        -d "grant_type=client_credentials" \
+        -d "client_id=${client_id}" \
+        -d "client_secret=${client_secret}" \
+        -d "scope=https://service.flow.microsoft.com//.default")
       if [[ "$debug" = true ]]; then
-        echo "Prepared JSON body for API call: $json_body"
+        echo "Azure AD token response: $token_response"
       fi
-      if [[ "$mock_api" = true ]]; then
-        echo "sending second POST request"
+      bearer_token=$(echo "$token_response" | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
+      if [[ "$debug" = true ]]; then
+        echo "Obtained bearer token: $bearer_token"
+      fi
+      if [[ -z "$bearer_token" ]]; then
+        echo "Failed to obtain bearer token from Azure AD." >&2
       else
+        api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
+        json_body="{ \"message\": \"${hungry_message}\" }"
+        if [[ "$debug" = true ]]; then
+          echo "Prepared JSON body for API call: $json_body"
+        fi
         api_response=$(curl -s -X POST "$api_url" \
           -H "Authorization: Bearer $bearer_token" \
           -H "Content-Type: application/json" \
