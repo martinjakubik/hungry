@@ -1,5 +1,5 @@
 # sets up usage
-USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}] --post_to_teams --debug"
+USAGE="usage: $0 --home -h [--days 3|-d 3] --office -o [-w | --what {Burrito, Ravioli, Burger, Pho, Sushi, Sushhhhiiiiiifdidiiiissqihiii}] --badminton -b [--when {Mo, Tu, We, Th, Sh, 1, 2, 3, ...}] --post_to_teams --mock_api --debug"
 
 location=0
 day_count=0
@@ -7,6 +7,8 @@ eat_intention=0
 current_date=$1; shift;
 when_option=""
 post_to_teams=false
+throttle_file=".hungry_throttle"
+mock_api=false
 debug=false
 hungry_message=""
 
@@ -94,6 +96,7 @@ do
     (--when=*) when_option="${1#*=}";;
     (--when) when_option="$2"; shift;;
     (--post_to_teams) post_to_teams=true;;
+    (--mock_api) mock_api=true;;
     (--debug) debug=true;;
     (-*) echo >&2 ${USAGE}
     exit 1;;
@@ -184,18 +187,21 @@ if [[ "$post_to_teams" = true ]]; then
     if [[ -z "$bearer_token" ]]; then
       echo "Failed to obtain bearer token from Azure AD." >&2
     else
-      # uses bearer token to authenticate second POST request
       api_url="https://a9e783c64191e1c187e90717075a3b.4e.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/f64b9f6c96ec451993e1901223aa87e0/triggers/manual/paths/invoke?api-version=1"
       json_body="{ \"message\": \"${hungry_message}\" }"
       if [[ "$debug" = true ]]; then
         echo "Prepared JSON body for API call: $json_body"
       fi
-      api_response=$(curl -s -X POST "$api_url" \
-        -H "Authorization: Bearer $bearer_token" \
-        -H "Content-Type: application/json" \
-        -d "$json_body")
-      if [[ "$debug" = true ]]; then
-        echo "API response: $api_response"
+      if [[ "$mock_api" = true ]]; then
+        echo "sending second POST request"
+      else
+        api_response=$(curl -s -X POST "$api_url" \
+          -H "Authorization: Bearer $bearer_token" \
+          -H "Content-Type: application/json" \
+          -d "$json_body")
+        if [[ "$debug" = true ]]; then
+          echo "API response: $api_response"
+        fi
       fi
     fi
   fi
